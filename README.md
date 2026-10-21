@@ -115,21 +115,11 @@ classDiagram
         Long id
         LocalDate data
         LocalTime horario
-        String observacao
         String status
-        alterarStatus(novoStatus, motivo)
     }
-    class HistoricoStatus {
-        Long id
-        String statusAnterior
-        String statusNovo
-        LocalDtateTime dataAlteracao
-        String motivo
-    }
-
-    Servico "1" --> "*" Agendamento : referencia
-    Agendamento "1" --> "*" HistoricoStatus : gera
-|
+    Cliente "1" --> "*" Agendamento : marca
+    Servico "1" --> "*" Agendamento : refere-se
+```
 }
 ### Acesso
 | Usuário | Senha | Perfil |
