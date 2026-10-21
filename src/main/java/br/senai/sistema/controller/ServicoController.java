@@ -2,10 +2,16 @@ package br.senai.sistema.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import br.senai.sistema.model.Servico;
 import br.senai.sistema.service.ServicoService;
+import jakarta.validation.Valid;
 
 /**
  * Controller de Servico: recebe as requisições do navegador para /servicos.
@@ -25,5 +31,27 @@ public class ServicoController {
     public String listar(Model model) {
         model.addAttribute("servicos", servicoService.listarTodos());
         return "servicos/lista";
+    }
+
+    /** GET /servicos/novo -> abre o formulário vazio. */
+    @GetMapping("/novo")
+    public String novo(Model model) {
+        model.addAttribute("servico", new Servico());
+        return "servicos/form";
+    }
+
+    /**
+     * POST /servicos/salvar -> recebe o formulário (cadastro ou edição).
+     * @Valid confere as regras da entidade; os erros ficam em "resultado".
+     */
+    @PostMapping("/salvar")
+    public String salvar(@Valid @ModelAttribute("servico") Servico servico, BindingResult resultado,
+                         RedirectAttributes atributos) {
+        if (resultado.hasErrors()) {
+            return "servicos/form";   // volta para o formulário mostrando os erros
+        }
+        servicoService.salvar(servico);
+        atributos.addFlashAttribute("mensagem", "Serviço salvo com sucesso.");
+        return "redirect:/servicos";
     }
 }
