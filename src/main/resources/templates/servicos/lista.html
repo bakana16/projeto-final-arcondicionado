@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Serviços')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: menu}"></nav>
+
+<main class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="h4 mb-0">Serviços</h1>
+        <!-- ${#lists.size(...)} conta quantos itens a lista tem -->
+        <span class="badge text-bg-secondary" th:text="${#lists.size(servicos)} + ' registro(s)'">0 registro(s)</span>
+    </div>
+
+    <!-- Mensagem quando ainda não há registros -->
+    <div th:if="${#lists.isEmpty(servicos)}" class="alert alert-info">Nenhum registro cadastrado.</div>
+
+    <div class="card shadow-sm" th:unless="${#lists.isEmpty(servicos)}">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0 align-middle">
+                <thead class="table-light">
+                <tr>
+                    <th>Nome</th>
+                    <th>Descrição</th>
+                    <th class="text-end">Duração (min)</th>
+                    <th class="text-end">Preço</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- th:each repete a linha <tr> para cada item da lista "servicos" -->
+                <tr th:each="servico : ${servicos}">
+                    <td th:text="${servico.nome}">Nome</td>
+                    <td th:text="${servico.descricao}">Descrição</td>
+                    <td class="text-end" th:text="${servico.duracaoMinutos}">0</td>
+                    <td class="text-end text-nowrap" th:text="${'R$ ' + #numbers.formatDecimal(servico.preco, 1, 'POINT', 2, 'COMMA')}">R$ 0,00</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: rodape}"></footer>
+</body>
+</html>

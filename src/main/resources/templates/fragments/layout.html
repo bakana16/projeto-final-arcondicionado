@@ -33,8 +33,10 @@
             <ul class="navbar-nav me-auto">
                 <li class="nav-item"><a class="nav-link" th:href="@{/}">Início</a></li>
                 <!-- Nos próximos encontros, acrescente aqui os links das páginas do seu sistema -->
+                  <li class="nav-item"><a class="nav-link" th:href="@{/servicos}">Serviços</a></li>
             </ul>
             <!-- Aparece somente quando a segurança estiver ligada e houver alguém logado -->
+    
             <div class="d-flex align-items-center gap-3" sec:authorize="isAuthenticated()">
                 <span class="text-white-50 small">
                     <i class="bi bi-person-circle"></i>
