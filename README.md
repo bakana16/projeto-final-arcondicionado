@@ -1,14 +1,11 @@
-# Nome do Sistema
-
-> Substitua o título acima pelo nome do seu sistema e preencha cada seção deste documento.
-> Este README é o **documento de visão** do projeto (entrega **AVA 1**) e, ao longo do curso,
-> também será o manual técnico de como executar o sistema.
+  # Arcondicionado Lima
+---
 
 | | |
 |---|---|
-| **Aluno(a)** | Seu nome completo |
-| **Turma** | |
-| **Opção escolhida** | Ordens de Serviço · Controle de Estoque · Agendamento de Serviços · Proposta própria |
+| **Aluno(a)** | Ana Vitória de Lima e Silva |
+| **Turma** | TEC-N-001788/2026 |
+| **Opção escolhida** |· Agendamento de Serviços · |
 | **Versão atual** | 0.1.0 |
 
 ---
@@ -22,12 +19,12 @@
 
 | Bloco | Resposta |
 |---|---|
-| **Usuários** (quem usa o sistema) | |
-| **Problema** (dor atual) | |
-| **Proposta de valor** (o que melhora com o sistema) | |
-| **Funcionalidades principais** | |
-| **Informações que o sistema guarda** | |
-| **Indicadores** (o que o gestor quer acompanhar) | |
+| **Usuários** (quem usa o sistema) | Clientes, Atendentes, Técnicos e Administrador |
+| **Problema** (dor atual) | Controle manual em planilhas e WhatsApp → conflito de horários, confusão entre os tipos de serviço, dificuldade de acompanhar atendimentos |
+| **Proposta de valor** (o que melhora com o sistema) | Agenda unificada; validação automática de horários; cadastro fixo dos 3 serviços; cálculo de duração e valor; histórico e relatórios |
+| **Funcionalidades principais** |Agendamento de Instalação, Manutenção e Limpeza; verificação de disponibilidade; agenda por técnico; cancelamento com registro; relatórios |
+| **Informações que o sistema guarda** | Usuários; serviços (nome, preço, duração); agendamentos (cliente, técnico, serviço, data, horários, endereço, status) |
+| **Indicadores** (o que o gestor quer acompanhar) |Quantidade e faturamento por serviço; taxa de cancelamento; atendimentos por técnico; status dos agendamentos |
 | **Restrições** (prazo, tecnologia, equipe) | Projeto individual · Java 21 · Spring Boot 4 · entrega v1.0 em 11/11 |
 
 ---
@@ -38,62 +35,102 @@
 
 | ID | Requisito | Nível |
 |---|---|---|
-| RF01 | Ex.: O sistema deve permitir cadastrar, listar, editar e excluir categorias. | Essencial |
-| RF02 | | |
-| RF03 | | |
+| RF01 |O sistema deve permitir selecionar os serviços: Instalação, Manutenção e Limpeza, cada um com preço e duração próprios.|	Essencial |
+| RF02 |O sistema deve permitir agendar um serviço informando cliente, técnico, tipo de serviço, data, horário e endereço.| Essencial
+| RF03 | O sistema deve bloquear agendamento se o horário já estiver ocupado para o mesmo técnico.| Essencial|
+| RF04 | O sistema deve exibir a agenda diária/semanal com distinção visual entre Instalação, Manutenção e Limpeza.|	Importante|
+| RF05 | Permitir cancelar ou reagendar, registrando responsável e motivo.|	Importante|
+| RF06 | Gerenciar usuários com perfis: Administrador, Atendente, Técnico e Cliente.|Essencial|
+| RF07 |	Administrador visualiza relatório com total e valor por tipo de serviço.|	Desejável|	
 
 ### 2.2 Requisitos não funcionais (COMO o sistema deve ser)
 
 | ID | Requisito |
 |---|---|
-| RNF01 | O sistema deve ser acessado pelo navegador (aplicação web). |
-| RNF02 | O sistema deve exigir login e senha; as senhas devem ser armazenadas criptografadas. |
-| RNF03 | |
+|RNF01|Acesso via navegador (aplicação web).
+|RNF02|Login obrigatório; senhas criptografadas.
+|RNF03|Verificação de horário em até 2 segundos.
+|RNF04|Funciona em celular e computador.
+|RNF05|Banco H2 (desenvolvimento) / MySQL (produção).
+|RNF06|Duração padrão: Instalação — 180 min; Manutenção — 120 min; Limpeza — 90 min.
 
 ### 2.3 Regras de negócio (as REGRAS do negócio que o sistema precisa respeitar)
 
 | ID | Regra |
 |---|---|
-| RN01 | Ex.: Não é permitido registrar uma saída maior que o saldo do produto. |
-| RN02 | |
-
+| RN01| Mesmo técnico não pode ter dois atendimentos que se sobreponham no tempo.
+|RN02	|Atendimentos apenas: seg–sex 08h–18h / sáb 08h–12h.
+|RN03|	Cancelamento com no mínimo 4h de antecedência.
+|RN04|	Serviços disponíveis: Instalação (R$ 350,00 · 3h), Manutenção (R$ 200,00 · 2h), Limpeza (R$ 150,00 · 1h30).
+|RN05	|Apenas Administrador e Atendente podem criar/editar agendamentos; Cliente só visualiza e solicita alteração.
 ---
 
 ## 3. Histórias de usuário
 
-Formato: **Como** *[papel]*, **quero** *[ação]*, **para** *[benefício]*.
+ HU01 — Agendar Instalação
+ Como atendente, quero agendar uma Instalação, para registrar o serviço com duração de 3h e valor correto, sem conflito de horário.
+ Exibe valor e duração ao selecionar "Instalação"
+ - Bloqueia horário + próximos 180 minutos para o técnico
+ - Salva com status "Agendado"
 
-**HU01 —** Como ..., quero ..., para ...
-- Critério de aceite: ...
-- Critério de aceite: ...
+HU02 — Agendar Manutenção
+Como atendente, quero agendar Manutenção, para registrar atendimento preventivo/corretivo com duração de 2h.
+ - Dados do cliente, endereço e técnico
+ - Sistema calcula horário de término automaticamente
+ - Confirmação visual na agenda
 
-**HU02 —** Como ..., quero ..., para ...
-- Critério de aceite: ...
+HU03 — Agendar Limpeza
+Como cliente/atendente, quero agendar Limpeza, para solicitar o serviço mais rápido com duração de 45m.
+ - Opção clara entre os 3 serviços
+ - Valor e duração visíveis antes de confirmar
+ - Confirmação disponível imediatamente
+
+HU04 — Técnico vê agenda
+Como técnico, quero ver minha agenda, para saber se é Instalação, Manutenção ou Limpeza, horário e endereço.
+ - Lista só meus atendimentos
+ - Cor diferenciada por tipo de serviço
+ - Status: Agendado / Em Andamento / Concluído / Cancelado
 
 ---
 
 ## 4. Modelo de dados
 
-<!-- Encontro 2: apague este comentário (as duas linhas) e cole aqui o diagrama de classes
-     em Mermaid (bloco que começa com ```mermaid), conforme o manual do Encontro 2. -->
+```mermaid
+classDiagram
+    direction LR
+    class Cliente {
+        Long id
+        String nome
+        String telefone
+        String email
+    }
+    class Servico {
+        Long id
+        String nome
+        String descricao
+        Integer duracaoMinutos
+        BigDecimal preco
+    }
+    class Agendamento {
+        Long id
+        LocalDate data
+        LocalTime horario
+        String observacao
+        String status
+        alterarStatus(novoStatus, motivo)
+    }
+    class HistoricoStatus {
+        Long id
+        String statusAnterior
+        String statusNovo
+        LocalDtateTime dataAlteracao
+        String motivo
+    }
 
----
-
-## 5. Como executar
-
-### No GitHub Codespaces (recomendado)
-1. No repositório, clique em **Code → Codespaces → Create codespace on main** (ou abra o Codespace existente).
-2. Aguarde a preparação do ambiente.
-3. No terminal, execute:
-   ```bash
-   mvn spring-boot:run
-   ```
-4. Quando aparecer o aviso da porta **8080**, clique em **Abrir no navegador**.
-
-### No computador (ferramentas instaladas)
-Requisitos: JDK 21 e uma IDE (IntelliJ IDEA ou VS Code com o *Extension Pack for Java*).
-Abra o projeto na IDE e execute a classe `SistemaApplication`. Acesse `http://localhost:8080`.
-
+    Servico "1" --> "*" Agendamento : referencia
+    Agendamento "1" --> "*" HistoricoStatus : gera
+|
+}
 ### Acesso
 | Usuário | Senha | Perfil |
 |---|---|---|
