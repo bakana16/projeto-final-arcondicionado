@@ -62,4 +62,12 @@ public class ServicoController {
         model.addAttribute("servico", servicoService.buscarPorId(id));
         return "servicos/form";
     }
+
+    /** POST /servicos/5/excluir -> exclui o registro de id 5. */
+    @PostMapping("/{id}/excluir")
+    public String excluir(@PathVariable Long id, RedirectAttributes atributos) {
+        servicoService.excluir(id);
+        atributos.addFlashAttribute("mensagem", "Serviço excluído com sucesso.");
+        return "redirect:/servicos";
+    }
 }
