@@ -8,12 +8,17 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 
 /**
- * Entidade Servico: representa o servico que o sistema guarda.
+ * Entidade Servico: representa o serviço que o sistema guarda.
  *
  * Cada objeto desta classe vira UMA LINHA da tabela "servicos" no banco.
- * Cada atributo vira UMA COLUNA dessa tabela.
+ * As anotações de validação (@NotBlank, @Size...) definem as regras dos campos do formulário.
  */
 @Entity
 @Table(name = "servicos")
@@ -24,22 +29,29 @@ public class Servico {
     private Long id;
 
     /** Nome do serviço oferecido. */
+    @NotBlank(message = "Campo obrigatório.")
+    @Size(max = 80, message = "Use no máximo 80 caracteres.")
     @Column(nullable = false, length = 80)
     private String nome;
 
     /** Detalhes do serviço. */
+    @Size(max = 255, message = "Use no máximo 255 caracteres.")
     @Column(length = 255)
     private String descricao;
 
     /** Tempo necessário, em minutos. */
+    @NotNull(message = "Campo obrigatório.")
+    @PositiveOrZero(message = "O valor não pode ser negativo.")
     @Column(nullable = false)
     private Integer duracaoMinutos;
 
     /** Valor cobrado. */
+    @NotNull(message = "Campo obrigatório.")
+    @DecimalMin(value = "0.00", message = "O valor não pode ser negativo.")
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal preco;
 
-    /** Construtor vazio: obrigatório para o JPA criar objetos ao ler do banco. */
+    /** Construtor vazio: obrigatório para o JPA e para o formulário criarem objetos. */
     public Servico() {
     }
 
@@ -51,7 +63,7 @@ public class Servico {
         this.preco = preco;
     }
 
-    // ---- Getters e setters: a forma de ler e alterar os atributos privados ----
+    // ---- Getters e setters ----
 
     public Long getId() {
         return id;
