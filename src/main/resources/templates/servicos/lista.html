@@ -30,6 +30,7 @@
                     <th>Descrição</th>
                     <th class="text-end">Duração (min)</th>
                     <th class="text-end">Preço</th>
+                    <th class="text-end">Ações</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -39,6 +40,9 @@
                     <td th:text="${servico.descricao}">Descrição</td>
                     <td class="text-end" th:text="${servico.duracaoMinutos}">0</td>
                     <td class="text-end text-nowrap" th:text="${'R$ ' + #numbers.formatDecimal(servico.preco, 1, 'POINT', 2, 'COMMA')}">R$ 0,00</td>
+                    <td class="text-end text-nowrap">
+                        <a th:href="@{/servicos/{id}/editar(id=${servico.id})}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i> Editar</a>
+                    </td>
                 </tr>
                 </tbody>
             </table>
