@@ -7,6 +7,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -48,6 +50,11 @@ public class Agendamento {
     @Column(length = 255)
     private String observacao;
 
+    /** Situação (agendado, concluído, cancelado). */
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    private StatusAgendamento status;
+
     /** Cliente atendido: relacionamento N:1 (muitos registros daqui apontam para um Cliente). */
     @NotNull(message = "Selecione um cliente.")
     @ManyToOne
@@ -65,9 +72,10 @@ public class Agendamento {
     }
 
     /** Construtor com os dados principais: facilita criar objetos no código. */
-    public Agendamento(LocalDate data, LocalTime horario, Cliente cliente, Servico servico) {
+    public Agendamento(LocalDate data, LocalTime horario, StatusAgendamento status, Cliente cliente, Servico servico) {
         this.data = data;
         this.horario = horario;
+        this.status = status;
         this.cliente = cliente;
         this.servico = servico;
     }
@@ -104,6 +112,14 @@ public class Agendamento {
 
     public void setObservacao(String observacao) {
         this.observacao = observacao;
+    }
+
+    public StatusAgendamento getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusAgendamento status) {
+        this.status = status;
     }
 
     public Cliente getCliente() {

@@ -14,6 +14,7 @@ import br.senai.sistema.model.Agendamento;
 import br.senai.sistema.model.Cliente;
 import br.senai.sistema.model.Perfil;
 import br.senai.sistema.model.Servico;
+import br.senai.sistema.model.StatusAgendamento;
 import br.senai.sistema.model.Usuario;
 import br.senai.sistema.repository.AgendamentoRepository;
 import br.senai.sistema.repository.ClienteRepository;
@@ -76,11 +77,11 @@ public class DadosIniciais implements CommandLineRunner {
             List<Cliente> clientes = clienteRepository.findAll(Sort.by("id"));
             List<Servico> servicos = servicoRepository.findAll(Sort.by("id"));
             if (!clientes.isEmpty() && !servicos.isEmpty()) {
-                Agendamento agendamento1 = new Agendamento(LocalDate.of(2026, 10, 27), LocalTime.of(8, 0),
+                Agendamento agendamento1 = new Agendamento(LocalDate.of(2026, 10, 27), LocalTime.of(8, 0), StatusAgendamento.AGENDADO,
                         clientes.get(0), servicos.get(0));
-                Agendamento agendamento2 = new Agendamento(LocalDate.of(2026, 10, 27), LocalTime.of(10, 30),
+                Agendamento agendamento2 = new Agendamento(LocalDate.of(2026, 10, 27), LocalTime.of(10, 30), StatusAgendamento.AGENDADO,
                         clientes.get(1 % clientes.size()), servicos.get(1 % servicos.size()));
-                Agendamento agendamento3 = new Agendamento(LocalDate.of(2026, 10, 28), LocalTime.of(14, 0),
+                Agendamento agendamento3 = new Agendamento(LocalDate.of(2026, 10, 28), LocalTime.of(14, 0), StatusAgendamento.AGENDADO,
                         clientes.get(2 % clientes.size()), servicos.get(2 % servicos.size()));
                 agendamento3.setObservacao("Avisar por telefone quando o carro estiver pronto");
                 agendamentoRepository.save(agendamento1);
