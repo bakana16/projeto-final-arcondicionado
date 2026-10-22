@@ -39,10 +39,12 @@ public class AgendamentoController {
         this.servicoService = servicoService;
     }
 
-    /** GET /agendamentos -> mostra a lista. */
+    /** GET /agendamentos -> mostra a lista. Com ?status=..., mostra só os registros daquela situação. */
     @GetMapping
-    public String listar(Model model) {
-        model.addAttribute("agendamentos", agendamentoService.listarTodos());
+    public String listar(@RequestParam(required = false) StatusAgendamento status, Model model) {
+        model.addAttribute("agendamentos", agendamentoService.listar(status));
+        model.addAttribute("situacoes", StatusAgendamento.values());   // opções do filtro
+        model.addAttribute("status", status);                  // mantém a opção escolhida no filtro
         return "agendamentos/lista";
     }
 

@@ -31,6 +31,14 @@ public class AgendamentoService {
         return agendamentoRepository.findAll(Sort.by("data", "horario"));
     }
 
+    /** Lista os registros de uma situação; sem filtro (null), lista todos. */
+    public List<Agendamento> listar(StatusAgendamento status) {
+        if (status == null) {
+            return listarTodos();
+        }
+        return agendamentoRepository.findByStatus(status, Sort.by("data", "horario"));
+    }
+
     /** Busca um registro pelo id. Se não existir, gera um erro com mensagem clara. */
     public Agendamento buscarPorId(Long id) {
         return agendamentoRepository.findById(id)
