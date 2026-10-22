@@ -1,5 +1,9 @@
 package br.senai.sistema.repository;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import br.senai.sistema.model.Agendamento;
@@ -12,4 +16,7 @@ import br.senai.sistema.model.Agendamento;
  * JpaRepository<Agendamento, Long>  ->  entidade Agendamento, chave primária do tipo Long.
  */
 public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> {
+
+    // Regra de negócio: agendamentos na mesma data e horário (para conferir se o horário está livre)
+    List<Agendamento> findByDataAndHorario(LocalDate data, LocalTime horario);
 }

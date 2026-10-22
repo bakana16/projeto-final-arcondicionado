@@ -8,16 +8,20 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.senai.sistema.model.Agendamento;
+import br.senai.sistema.model.StatusAgendamento;
 import br.senai.sistema.service.AgendamentoService;
 import br.senai.sistema.service.ClienteService;
+import br.senai.sistema.service.RegraNegocioException;
 import br.senai.sistema.service.ServicoService;
 import jakarta.validation.Valid;
 
 /**
  * Controller de Agendamento: recebe as requisições do navegador para /agendamentos.
+ * Os erros de regra de negócio (RegraNegocioException) viram o aviso vermelho da tela.
  */
 @Controller
 @RequestMapping("/agendamentos")
@@ -51,18 +55,24 @@ public class AgendamentoController {
     }
 
     /**
-     * POST /agendamentos/salvar -> recebe o formulário (cadastro ou edição).
-     * @Valid confere as regras da entidade; os erros ficam em "resultado".
+     * POST /agendamentos/salvar -> recebe o formulário.
+     * Primeiro as validações dos campos (@Valid); depois, no service, as regras de negócio.
      */
     @PostMapping("/salvar")
     public String salvar(@Valid @ModelAttribute("agendamento") Agendamento agendamento, BindingResult resultado,
                          Model model, RedirectAttributes atributos) {
         if (resultado.hasErrors()) {
             carregarListas(model);
-            return "agendamentos/form";   // volta para o formulário mostrando os erros
+            return "agendamentos/form";   // volta para o formulário mostrando os erros dos campos
         }
-        agendamentoService.salvar(agendamento);
-        atributos.addFlashAttribute("mensagem", "Agendamento salvo com sucesso.");
+        try {
+            agendamentoService.salvar(agendamento);
+            atributos.addFlashAttribute("mensagem", "Agendamento salvo com sucesso.");
+        } catch (RegraNegocioException e) {
+            model.addAttribute("erro", e.getMessage());   // aparece no aviso vermelho, acima do formulário
+            carregarListas(model);
+            return "agendamentos/form";
+        }
         return "redirect:/agendamentos";
     }
 
@@ -74,11 +84,27 @@ public class AgendamentoController {
         return "agendamentos/form";
     }
 
-    /** POST /agendamentos/5/excluir -> exclui o registro de id 5. */
+    /** POST /agendamentos/5/excluir -> exclui o registro de id 5 (se as regras permitirem). */
     @PostMapping("/{id}/excluir")
     public String excluir(@PathVariable Long id, RedirectAttributes atributos) {
-        agendamentoService.excluir(id);
-        atributos.addFlashAttribute("mensagem", "Agendamento excluído com sucesso.");
+        try {
+            agendamentoService.excluir(id);
+            atributos.addFlashAttribute("mensagem", "Agendamento excluído com sucesso.");
+        } catch (RegraNegocioException e) {
+            atributos.addFlashAttribute("erro", e.getMessage());
+        }
+        return "redirect:/agendamentos";
+    }
+
+    /** POST /agendamentos/5/status?status=... -> muda a situação do registro de id 5. */
+    @PostMapping("/{id}/status")
+    public String mudarStatus(@PathVariable Long id, @RequestParam StatusAgendamento status, RedirectAttributes atributos) {
+        try {
+            agendamentoService.mudarStatus(id, status);
+            atributos.addFlashAttribute("mensagem", "Situação alterada para " + status.getDescricao() + ".");
+        } catch (RegraNegocioException e) {
+            atributos.addFlashAttribute("erro", e.getMessage());
+        }
         return "redirect:/agendamentos";
     }
 
