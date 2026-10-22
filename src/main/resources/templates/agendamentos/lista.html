@@ -28,6 +28,7 @@
                     <th>Cliente</th>
                     <th>Serviço</th>
                     <th>Observação</th>
+                    <th>Situação</th>
                     <th class="text-end">Ações</th>
                 </tr>
                 </thead>
@@ -39,8 +40,16 @@
                     <td th:text="${agendamento.cliente.nome}">Cliente</td>
                     <td th:text="${agendamento.servico.nome}">Serviço</td>
                     <td th:text="${agendamento.observacao}">Observação</td>
+                    <td><span class="badge" th:classappend="'text-bg-' + ${agendamento.status.cor}" th:text="${agendamento.status.descricao}">Situação</span></td>
                     <td class="text-end text-nowrap">
                         <a th:href="@{/agendamentos/{id}/editar(id=${agendamento.id})}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i> Editar</a>
+                        <!-- Mudar a situação: formulário POST que envia a nova situação -->
+                        <form th:if="${agendamento.status.name() == 'AGENDADO'}" th:action="@{/agendamentos/{id}/status(status='CONCLUIDO', id=${agendamento.id})}" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-outline-success"><i class="bi bi-check2-circle"></i> Concluir</button>
+                        </form>
+                        <form th:if="${agendamento.status.name() == 'AGENDADO'}" th:action="@{/agendamentos/{id}/status(status='CANCELADO', id=${agendamento.id})}" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-outline-secondary"><i class="bi bi-x-circle"></i> Cancelar</button>
+                        </form>
                         <!-- Excluir usa um formulário POST; o confirm() pede confirmação antes de enviar -->
                         <form th:action="@{/agendamentos/{id}/excluir(id=${agendamento.id})}" method="post" class="d-inline"
                               onsubmit="return confirm('Confirma a exclusão deste registro?');">
