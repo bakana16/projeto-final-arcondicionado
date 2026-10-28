@@ -52,6 +52,12 @@ public class DadosIniciais implements CommandLineRunner {
             usuarioRepository.save(new Usuario("Operador", "operador",
                     passwordEncoder.encode("operador123"), Perfil.OPERADOR));
         }
+          // Desafio: um terceiro usuário. O "if" usa o login (e não o count), porque a tabela
+        // de usuários já tem registros: assim ele é criado mesmo sem apagar o banco.
+        if (usuarioRepository.findByLogin("maria").isEmpty()) {
+            usuarioRepository.save(new Usuario("Maria Souza", "maria",
+                    passwordEncoder.encode("maria123"), Perfil.OPERADOR));
+        }
 
         if (servicoRepository.count() == 0) {
             Servico servico1 = new Servico("Troca de óleo", "Troca de óleo e filtro", 30, new BigDecimal("120.00"));
@@ -69,6 +75,8 @@ public class DadosIniciais implements CommandLineRunner {
             clienteRepository.save(cliente1);
             clienteRepository.save(cliente2);
             clienteRepository.save(cliente3);
+
+                   
         }
 
         // Operação principal: cada registro aponta para registros que já existem (relacionamento).
