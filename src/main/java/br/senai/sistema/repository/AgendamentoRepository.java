@@ -24,4 +24,15 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> 
 
     // Filtro: registros de uma situação, na ordem indicada
     List<Agendamento> findByStatus(StatusAgendamento status, Sort ordem);
+
+    // Painel: quantos agendamentos em uma data e entre duas datas
+    long countByData(LocalDate data);
+
+    long countByDataBetween(LocalDate inicio, LocalDate fim);
+
+    // Painel: quantos agendamentos em uma situação
+    long countByStatus(StatusAgendamento status);
+
+    // Painel: os agendamentos de um dia, em ordem de horário
+    List<Agendamento> findByDataOrderByHorarioAsc(LocalDate data);
 }
