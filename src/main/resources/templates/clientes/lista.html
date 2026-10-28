@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="~{fragments/layout :: head('Clientes')}"></head>
 <body>
 <nav th:replace="~{fragments/layout :: menu}"></nav>
@@ -9,7 +9,8 @@
         <h1 class="h4 mb-0">Clientes
             <span class="badge text-bg-secondary align-middle" th:text="${#lists.size(clientes)} + ' registro(s)'">0 registro(s)</span>
         </h1>
-        <a th:href="@{/clientes/novo}" class="btn btn-app"><i class="bi bi-plus-lg"></i> Novo cliente</a>
+        <!-- Botões de cadastro, edição e exclusão: só para o perfil ADMIN -->
+        <a th:href="@{/clientes/novo}" class="btn btn-app" sec:authorize="hasRole('ADMIN')"><i class="bi bi-plus-lg"></i> Novo cliente</a>
     </div>
 
     <!-- Mensagem de sucesso: fragmento reaproveitado do layout -->
@@ -26,7 +27,7 @@
                     <th>Nome</th>
                     <th>Telefone</th>
                     <th>E-mail</th>
-                    <th class="text-end">Ações</th>
+                    <th class="text-end" sec:authorize="hasRole('ADMIN')">Ações</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -35,7 +36,7 @@
                     <td th:text="${cliente.nome}">Nome</td>
                     <td th:text="${cliente.telefone}">Telefone</td>
                     <td th:text="${cliente.email}">E-mail</td>
-                    <td class="text-end text-nowrap">
+                    <td class="text-end text-nowrap" sec:authorize="hasRole('ADMIN')">
                         <a th:href="@{/clientes/{id}/editar(id=${cliente.id})}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-pencil"></i> Editar</a>
                         <!-- Excluir usa um formulário POST; o confirm() pede confirmação antes de enviar -->
                         <form th:action="@{/clientes/{id}/excluir(id=${cliente.id})}" method="post" class="d-inline"
