@@ -13,11 +13,19 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 @ControllerAdvice
 public class AtributosGlobais {
 
-    @Value("${app.nome:Meu Sistema}")
+    @Value("${app.nome: Agenda Ar Condicionado}")
     private String nomeDoSistema;
+
+    @Value("${app.empresa: Londrina ArCondicionado}")
+    private String nomeDaEmpresa;
 
     @ModelAttribute("appNome")
     public String appNome() {
         return nomeDoSistema;
+    }
+
+    @ModelAttribute("appEmpresa")
+    public String appEmpresa() {
+        return nomeDaEmpresa;
     }
 }

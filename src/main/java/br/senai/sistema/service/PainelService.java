@@ -49,4 +49,22 @@ public class PainelService {
     public List<Agendamento> atencao() {
         return agendamentoRepository.findByDataOrderByHorarioAsc(hoje());
     }
+
+    /** Gráfico: nomes das barras (uma por situação). */
+    public List<String> graficoRotulos() {
+        List<String> rotulos = new ArrayList<>();
+        for (StatusAgendamento status : StatusAgendamento.values()) {
+            rotulos.add(status.getDescricao());
+        }
+        return rotulos;
+    }
+
+    /** Gráfico: altura de cada barra (quantos agendamentos em cada situação). */
+    public List<Long> graficoValores() {
+        List<Long> valores = new ArrayList<>();
+        for (StatusAgendamento status : StatusAgendamento.values()) {
+            valores.add(agendamentoRepository.countByStatus(status));
+        }
+        return valores;
+    }
 }

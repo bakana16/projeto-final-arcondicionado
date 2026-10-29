@@ -6,9 +6,11 @@
 # =====================================================================
 
 app:
+ app:
   # Nome do seu sistema: aparece no menu e no título das páginas.
-  # TROQUE para o nome do seu projeto (ex.: "Estoque Fácil", "OS Técnica").
-  nome: "Agendamento de Serviços"
+  nome: "Agendamento ArCondicionado"
+  # Nome da empresa: aparece no rodapé de todas as páginas.
+  empresa: "Londrina ArCondicionado"
   seguranca:
      # Segurança (login): ligada a partir do Encontro 7.
       
@@ -19,8 +21,7 @@ server:
 
 spring:
   application:
-    name: sistema
-
+    name: Londrina ArCondicionado
   # -------------------------------------------------------------------
   #  Banco de dados de DESENVOLVIMENTO: H2 (embutido, salvo na pasta ./dados)
   #  MODE=MySQL deixa o H2 parecido com o MySQL, usado em produção.
