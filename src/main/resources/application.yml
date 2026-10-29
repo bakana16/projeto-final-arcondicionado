@@ -18,6 +18,7 @@ app:
 
 server:
   port: 8080
+  forward-headers-strategy: framework
 
 spring:
   application:
@@ -53,3 +54,4 @@ spring:
   # Sem cache: alterações nas páginas aparecem ao recarregar o navegador.
   thymeleaf:
     cache: false
+  

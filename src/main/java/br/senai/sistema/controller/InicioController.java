@@ -58,4 +58,3 @@ public class InicioController {
     public String login() {
         return "login";
     }
-}
